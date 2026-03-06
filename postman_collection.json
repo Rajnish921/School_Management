@@ -1,0 +1,252 @@
+{
+  "info": {
+    "_postman_id": "school-mgmt-api-001",
+    "name": "School Management API",
+    "description": "API collection for School Management System\n- Add new schools\n- List schools sorted by proximity",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Check if the API server is running"
+      },
+      "response": []
+    },
+    {
+      "name": "Add School",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Green Valley High School\",\n  \"address\": \"123 Main Street, New York City\",\n  \"latitude\": 40.7128,\n  \"longitude\": -74.0060\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/addSchool",
+          "host": ["{{baseUrl}}"],
+          "path": ["addSchool"]
+        },
+        "description": "Add a new school to the database\n\n**Request Body:**\n- name: School name (required, non-empty string)\n- address: School address (required, non-empty string)\n- latitude: Latitude coordinate (required, -90 to 90)\n- longitude: Longitude coordinate (required, -180 to 180)\n\n**Success Response:** 201 Created"
+      },
+      "response": [
+        {
+          "name": "Success - School Added",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Green Valley High School\",\n  \"address\": \"123 Main Street, New York City\",\n  \"latitude\": 40.7128,\n  \"longitude\": -74.0060\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addSchool",
+              "host": ["{{baseUrl}}"],
+              "path": ["addSchool"]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "header": [],
+          "body": "{\n  \"success\": true,\n  \"message\": \"School added successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Green Valley High School\",\n    \"address\": \"123 Main Street, New York City\",\n    \"latitude\": 40.7128,\n    \"longitude\": -74.0060\n  }\n}"
+        },
+        {
+          "name": "Error - Validation Failed",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"address\": \"123 Main Street\",\n  \"latitude\": 200,\n  \"longitude\": -74.0060\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addSchool",
+              "host": ["{{baseUrl}}"],
+              "path": ["addSchool"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed\",\n  \"errors\": [\n    \"Name is required and must be a non-empty string\",\n    \"Latitude must be a number between -90 and 90\"\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Add School - Example 2",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Riverside Elementary School\",\n  \"address\": \"456 Oak Avenue, New York City\",\n  \"latitude\": 40.7580,\n  \"longitude\": -73.9855\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/addSchool",
+          "host": ["{{baseUrl}}"],
+          "path": ["addSchool"]
+        },
+        "description": "Add another school example"
+      },
+      "response": []
+    },
+    {
+      "name": "Add School - Example 3",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Central Middle School\",\n  \"address\": \"789 Pine Road, New York City\",\n  \"latitude\": 40.6892,\n  \"longitude\": -74.0445\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/addSchool",
+          "host": ["{{baseUrl}}"],
+          "path": ["addSchool"]
+        },
+        "description": "Add third school example"
+      },
+      "response": []
+    },
+    {
+      "name": "List Schools - Sorted by Proximity",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/listSchools?latitude=40.7128&longitude=-74.0060",
+          "host": ["{{baseUrl}}"],
+          "path": ["listSchools"],
+          "query": [
+            {
+              "key": "latitude",
+              "value": "40.7128",
+              "description": "User's latitude (-90 to 90)"
+            },
+            {
+              "key": "longitude",
+              "value": "-74.0060",
+              "description": "User's longitude (-180 to 180)"
+            }
+          ]
+        },
+        "description": "Fetch all schools sorted by proximity to user's location\n\n**Query Parameters:**\n- latitude: User's latitude (required, -90 to 90)\n- longitude: User's longitude (required, -180 to 180)\n\n**Distance Sorting:** Schools sorted from closest to farthest (ascending order)\n\n**Success Response:** 200 OK"
+      },
+      "response": [
+        {
+          "name": "Success - Schools Listed",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/listSchools?latitude=40.7128&longitude=-74.0060",
+              "host": ["{{baseUrl}}"],
+              "path": ["listSchools"],
+              "query": [
+                {
+                  "key": "latitude",
+                  "value": "40.7128"
+                },
+                {
+                  "key": "longitude",
+                  "value": "-74.0060"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [],
+          "body": "{\n  \"success\": true,\n  \"message\": \"Schools retrieved successfully\",\n  \"userLocation\": {\n    \"latitude\": 40.7128,\n    \"longitude\": -74.0060\n  },\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Green Valley High School\",\n      \"address\": \"123 Main Street\",\n      \"latitude\": 40.7128,\n      \"longitude\": -74.0060,\n      \"distance\": 0.0,\n      \"coordinates\": {\n        \"latitude\": 40.7128,\n        \"longitude\": -74.0060\n      }\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Riverside Elementary\",\n      \"address\": \"456 Oak Avenue\",\n      \"latitude\": 40.7580,\n      \"longitude\": -73.9855,\n      \"distance\": 5.23,\n      \"coordinates\": {\n        \"latitude\": 40.7580,\n        \"longitude\": -73.9855\n      }\n    },\n    {\n      \"id\": 3,\n      \"name\": \"Central Middle School\",\n      \"address\": \"789 Pine Road\",\n      \"latitude\": 40.6892,\n      \"longitude\": -74.0445,\n      \"distance\": 7.89,\n      \"coordinates\": {\n        \"latitude\": 40.6892,\n        \"longitude\": -74.0445\n      }\n    }\n  ],\n  \"totalCount\": 3\n}"
+        },
+        {
+          "name": "Error - Missing Parameters",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/listSchools",
+              "host": ["{{baseUrl}}"],
+              "path": ["listSchools"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "header": [],
+          "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed\",\n  \"errors\": [\n    \"Latitude is required\",\n    \"Longitude is required\"\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "List Schools - Different Location",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/listSchools?latitude=40.7500&longitude=-73.9900",
+          "host": ["{{baseUrl}}"],
+          "path": ["listSchools"],
+          "query": [
+            {
+              "key": "latitude",
+              "value": "40.7500",
+              "description": "Different user location - latitude"
+            },
+            {
+              "key": "longitude",
+              "value": "-73.9900",
+              "description": "Different user location - longitude"
+            }
+          ]
+        },
+        "description": "Test with different user coordinates to see schools sorted by different distances"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string",
+      "description": "Change this to your deployed API URL when in production"
+    }
+  ]
+}
